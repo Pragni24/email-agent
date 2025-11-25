@@ -277,34 +277,40 @@ Email Categorization | Action-item Extraction | Auto-drafting | Chat-based Inbox
 
     # ========== TAB 1 : INBOX ==========
     with tab1:
+        st.subheader("📥 Raw Inbox Emails")
+
+        inbox = st.session_state["inbox"]
+
+        if not inbox:
+            st.warning("No emails found in inbox.json")
+        else:
+            for email in inbox:
+                st.markdown("----")
+                st.markdown(f"**From:** {email['sender']}")
+                st.markdown(f"**Subject:** {email['subject']}")
+                st.markdown(f"**Time:** {email['timestamp']}")
+                st.markdown("**Body:**")
+                st.write(email["body"])
+
+        st.markdown("## ⚙️ Email Ingestion Pipeline")
 
         if st.button("🚀 Run Ingestion Pipeline"):
             run_ingestion_pipeline()
 
         if not st.session_state["processed"]:
-            st.info("Run ingestion first.")
-            return
+            st.info("No processed emails yet. Run the pipeline above.")
+        else:
+            st.markdown("## ✅ Processed Emails")
 
-        for email in st.session_state["processed"]:
-
-            color = category_color(email["category"])
-
-            st.markdown(f"""
-            <div class="card">
-                <h4>📩 {email['subject']}</h4>
-                <p><b>From:</b> {email['sender']}</p>
-                <p><b>Time:</b> {email['timestamp']}</p>
-                <span style="padding:6px 12px; background:{color}; border-radius:15px; font-weight:bold;">
-                    {email['category']}
-                </span>
-                <p style="margin-top:10px;">{email['body']}</p>
-            </div>
-            """, unsafe_allow_html=True)
-
-            if email["actions"]:
-                st.markdown("✅ Action Items:")
-                for task in email["actions"]:
-                    st.write(f"- {task.get('task')} (Deadline: {task.get('deadline', 'Not specified')})")
+            for email in st.session_state["processed"]:
+                st.markdown("----")
+                st.markdown(f"**From:** {email['sender']}")
+                st.markdown(f"**Subject:** {email['subject']}")
+                st.markdown(f"**Category:** `{email['category']}`")
+                st.markdown("**Extracted Action Items:**")
+                st.write(email["actions"])
+                st.markdown("**Body:**")
+                st.write(email["body"])
 
     # ========== TAB 2 : AGENT ==========
     with tab2:
