@@ -1,0 +1,139 @@
+[
+  {
+    "id": 1,
+    "sender": "manager@company.com",
+    "subject": "Project Alpha weekly update",
+    "timestamp": "2025-11-20T09:30:00",
+    "body": "Hi, please send me the weekly update for Project Alpha by Friday. Include progress, blockers, and next steps.",
+    "category": "To-Do",
+    "actions": [
+      {
+        "task": "send weekly update for Project Alpha",
+        "deadline": "Friday"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "sender": "hr@company.com",
+    "subject": "Upcoming performance review meeting",
+    "timestamp": "2025-11-18T14:00:00",
+    "body": "Hello, your performance review is scheduled for next Wednesday at 3 PM. Please confirm your availability and prepare a short summary of your achievements this quarter.",
+    "category": "To-Do",
+    "actions": [
+      {
+        "task": "Confirm availability for performance review meeting",
+        "deadline": "next Wednesday"
+      },
+      {
+        "task": "Prepare a short summary of achievements this quarter",
+        "deadline": "next Wednesday"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "sender": "newsletter@techdaily.com",
+    "subject": "TechDaily Weekly Newsletter",
+    "timestamp": "2025-11-19T08:00:00",
+    "body": "Welcome to this week's TechDaily newsletter. In this edition we cover AI trends, cloud computing updates, and software engineering best practices.",
+    "category": "Newsletter",
+    "actions": []
+  },
+  {
+    "id": 4,
+    "sender": "spam-offer@randompromo.com",
+    "subject": "You won a FREE vacation!!!",
+    "timestamp": "2025-11-17T11:45:00",
+    "body": "Congratulations! You have been selected for a free all-expenses-paid vacation. Click this suspicious link now to claim your prize.",
+    "category": "Spam",
+    "actions": []
+  },
+  {
+    "id": 5,
+    "sender": "colleague@company.com",
+    "subject": "Help needed with deployment",
+    "timestamp": "2025-11-21T16:15:00",
+    "body": "Hey, can you help me deploy the new version of the API to the staging environment tomorrow morning?",
+    "category": "To-Do",
+    "actions": [
+      {
+        "task": "deploy the new version of the API to the staging environment",
+        "deadline": "tomorrow morning"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "sender": "teamlead@company.com",
+    "subject": "Client meeting request: UX review",
+    "timestamp": "2025-11-20T10:45:00",
+    "body": "The client would like to schedule a meeting next week to review the UX designs. Please share your availability and prepare a short demo.",
+    "category": "To-Do",
+    "actions": [
+      {
+        "task": "Share availability",
+        "deadline": "next week"
+      },
+      {
+        "task": "Prepare a short demo",
+        "deadline": "next week"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "sender": "taskbot@company.com",
+    "subject": "Action required: Security training",
+    "timestamp": "2025-11-16T13:20:00",
+    "body": "This is a reminder that you must complete the mandatory security training by the end of this month.",
+    "category": "To-Do",
+    "actions": [
+      {
+        "task": "complete the mandatory security training",
+        "deadline": "end of this month"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "sender": "project-owner@company.com",
+    "subject": "Project Beta: deliverables update",
+    "timestamp": "2025-11-19T15:40:00",
+    "body": "Please send me the updated list of deliverables for Project Beta and highlight any items that are at risk.",
+    "category": "To-Do",
+    "actions": [
+      {
+        "task": "send updated list of deliverables for Project Beta",
+        "deadline": null
+      },
+      {
+        "task": "highlight items at risk",
+        "deadline": null
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "sender": "events@company.com",
+    "subject": "Company town hall invitation",
+    "timestamp": "2025-11-15T09:00:00",
+    "body": "You are invited to the quarterly company town hall next Friday at 4 PM. Attendance is recommended but not mandatory.",
+    "category": "To-Do",
+    "actions": [
+      {
+        "task": "Attend the quarterly company town hall",
+        "deadline": "next Friday at 4 PM"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "sender": "client@external.com",
+    "subject": "Follow-up on bug report",
+    "timestamp": "2025-11-22T11:10:00",
+    "body": "Hi, just checking in on the bug we reported last week. Is there an update on the fix and expected release date?",
+    "category": "To-Do",
+    "actions": []
+  }
+]

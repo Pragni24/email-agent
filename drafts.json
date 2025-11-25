@@ -1,0 +1,22 @@
+[
+  {
+    "mode": "reply",
+    "email_id": 1,
+    "email_subject": "Project Alpha weekly update",
+    "subject": "Re: Project Alpha weekly update",
+    "body": "Dear Manager, I will ensure that the weekly update for Project Alpha is sent to you by Friday. The update will include progress made, any blockers we are currently facing, and the next steps for the project. If there is any specific information you would like me to include, please let me know. Thank you for your time and I look forward to sending you the update.",
+    "follow_ups": [
+      "Send weekly update by Friday"
+    ],
+    "tone": "Formal",
+    "metadata": {
+      "category": "To-Do",
+      "actions": [
+        {
+          "task": "send weekly update for Project Alpha",
+          "deadline": "Friday"
+        }
+      ]
+    }
+  }
+]
