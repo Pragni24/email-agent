@@ -123,8 +123,27 @@ def draft_auto_reply(email_text, prompt, tone):
         return json.loads(raw)
     except:
         return {"subject": "Re:", "body": raw, "follow_ups": []}
+def summarize_email(email_text):
+    system_prompt = "You are a professional email summarization assistant."
+    
+    user_prompt = f"""
+Summarize the email below in 2-3 simple sentences.
+Do NOT categorize it.
+Do NOT extract actions.
+Just explain what the email is about.
+
+EMAIL:
+{email_text}
+"""
+    return call_llm(system_prompt, user_prompt, 0.2)
 
 def email_agent_answer(email_text, question, prompts):
+    
+    # ✅ If user is asking for summary, bypass prompt brain
+    if "summary" in question.lower() or "summarize" in question.lower():
+        return summarize_email(email_text)
+
+    # ✅ Otherwise use normal agent behavior
     combined_prompt = f"""
 EMAIL:
 {email_text}
