@@ -74,3 +74,19 @@ email-agent/
 ├── requirements.txt     # Project dependencies
 ├── .env                 # API keys (not uploaded)
 └── README.md            # Project documentation
+```
+
+---
+
+## ⚙️ Installation & Setup Guide
+
+Follow these steps to run the project on your machine.
+- Step 1: Clone the Repository
+```bash
+git clone <your-repository-link>
+cd email-agent
+```
+- Step 2: Create a Virtual Environment
+
+This keeps your project dependencies isolated.
+
