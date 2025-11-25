@@ -92,21 +92,6 @@ def call_llm(system_prompt, user_prompt, temperature=0.3):
 
     return response.json()["choices"][0]["message"]["content"].strip()
 
-# ================= SPECIAL SUMMARY FUNCTION =================
-
-def summarize_email(email_text):
-    system_prompt = "You are a professional email summarization assistant."
-    user_prompt = f"""
-Summarize this email in 2-3 short sentences.
-DO NOT classify the email.
-DO NOT extract tasks.
-ONLY summarize what the email is about.
-
-EMAIL:
-{email_text}
-"""
-    return call_llm(system_prompt, user_prompt, 0.2)
-
 # ================= LLM TASKS =================
 
 def categorize_email(email_text, prompt):
@@ -139,14 +124,7 @@ def draft_auto_reply(email_text, prompt, tone):
     except:
         return {"subject": "Re:", "body": raw, "follow_ups": []}
 
-# ================= AGENT CHAT LOGIC =================
-
 def email_agent_answer(email_text, question, prompts):
-    # ✅ Dedicated summary mode
-    if "summary" in question.lower() or "summarize" in question.lower():
-        return summarize_email(email_text)
-
-    # ✅ Otherwise use prompt brain controlled agent
     combined_prompt = f"""
 EMAIL:
 {email_text}
@@ -227,38 +205,116 @@ Email Categorization | Action-item Extraction | Auto-drafting | Chat-based Inbox
 
     init_state()
 
+    # ============ 🧠 SIDEBAR: PROMPT BRAIN CONTROL PANEL ============
+
+    st.sidebar.header("🧠 Prompt Brain Control Panel")
+
+    st.sidebar.markdown("""
+    This panel controls how your AI agent thinks and behaves.
+    You can modify prompts and immediately see the effects.
+    """)
+
+    # Toggle LLM or Mock Mode
+    global USE_LLM
+    USE_LLM = st.sidebar.toggle("Enable Live LLM (Disable for Mock Mode)", value=True)
+
+    # Load prompts
+    prompts = st.session_state["prompts"]
+
+    # Editable prompt inputs
+    prompts["categorization_prompt"] = st.sidebar.text_area(
+        "📌 Categorization Prompt",
+        prompts["categorization_prompt"],
+        height=100
+    )
+
+    prompts["action_item_prompt"] = st.sidebar.text_area(
+        "✅ Action Extraction Prompt",
+        prompts["action_item_prompt"],
+        height=100
+    )
+
+    prompts["auto_reply_prompt"] = st.sidebar.text_area(
+        "✉ Auto Reply Prompt",
+        prompts["auto_reply_prompt"],
+        height=100
+    )
+
+    # Save button
+    if st.sidebar.button("💾 Save Prompt Brain"):
+        save_prompts(prompts)
+        st.sidebar.success("✅ Prompt Brain Saved")
+
+    # ------------------ LIVE PROMPT TEST ------------------
+
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("🧪 Test Your Prompt Brain")
+
+    test_email = st.sidebar.text_area(
+        "Test Email Input",
+        "From: hr@company.com\nSubject: Performance Review\nBody: Please attend your performance review next Wednesday at 3 PM."
+    )
+
+    if st.sidebar.button("🔍 Test Categorization Prompt"):
+        result = categorize_email(test_email, prompts["categorization_prompt"])
+        st.sidebar.success(f"Predicted Category: {result}")
+
+    if st.sidebar.button("✅ Test Action Extraction Prompt"):
+        tasks = extract_actions(test_email, prompts["action_item_prompt"])
+        st.sidebar.write("Extracted Tasks:")
+        st.sidebar.json(tasks)
+
+    if st.sidebar.button("✉ Test Auto Reply Prompt"):
+        draft = draft_auto_reply(test_email, prompts["auto_reply_prompt"], "Professional")
+        st.sidebar.write("Generated Draft:")
+        st.sidebar.json(draft)
+
+    st.sidebar.markdown("---")
+    st.sidebar.info("This sidebar acts as the agent's brain control system. Modify prompts to change AI behavior.")
+
     # ===== Tabs =====
     tab1, tab2, tab3 = st.tabs(["📥 Inbox", "🤖 Agent", "✍ Drafts"])
 
     # ========== TAB 1 : INBOX ==========
-
     with tab1:
         st.subheader("📥 Raw Inbox Emails")
 
-        for email in st.session_state["inbox"]:
-            st.markdown("---")
-            st.markdown(f"**From:** {email['sender']}")
-            st.markdown(f"**Subject:** {email['subject']}")
-            st.markdown(f"**Time:** {email['timestamp']}")
-            st.write(email["body"])
+        inbox = st.session_state["inbox"]
+
+        if not inbox:
+            st.warning("No emails found in inbox.json")
+        else:
+            for email in inbox:
+                st.markdown("----")
+                st.markdown(f"**From:** {email['sender']}")
+                st.markdown(f"**Subject:** {email['subject']}")
+                st.markdown(f"**Time:** {email['timestamp']}")
+                st.markdown("**Body:**")
+                st.write(email["body"])
 
         st.markdown("## ⚙️ Email Ingestion Pipeline")
 
         if st.button("🚀 Run Ingestion Pipeline"):
             run_ingestion_pipeline()
 
-        if st.session_state["processed"]:
+        if not st.session_state["processed"]:
+            st.info("No processed emails yet. Run the pipeline above.")
+        else:
             st.markdown("## ✅ Processed Emails")
+
             for email in st.session_state["processed"]:
-                st.markdown("---")
+                st.markdown("----")
+                st.markdown(f"**From:** {email['sender']}")
                 st.markdown(f"**Subject:** {email['subject']}")
-                st.markdown(f"Category: `{email['category']}`")
-                st.write("Tasks:", email["actions"])
+                st.markdown(f"**Category:** `{email['category']}`")
+                st.markdown("**Extracted Action Items:**")
+                st.write(email["actions"])
+                st.markdown("**Body:**")
                 st.write(email["body"])
 
     # ========== TAB 2 : AGENT ==========
-
     with tab2:
+
         inbox = st.session_state["inbox"]
 
         idx = st.selectbox("Select Email", range(len(inbox)), format_func=lambda i: inbox[i]["subject"])
@@ -271,28 +327,25 @@ Body:
 {email['body']}
 """
 
-        st.markdown("## 🤖 Email Agent")
+        st.markdown("## 🤖 Email Agent Chat Interface")
+        question = st.text_area("Ask something:", "Summarize this email.")
 
-        question = st.text_area(
-            "Ask the agent:",
-            "Summarize this email."
-        )
-
-        if st.button("💬 Ask Agent"):
-            ans = email_agent_answer(email_text, question, st.session_state["prompts"])
+        if st.button("Ask Agent"):
+            ans = email_agent_answer(email_text, question, prompts)
             st.markdown(f"<div class='agent-box'>{ans}</div>", unsafe_allow_html=True)
 
-        # ---- Draft Section ----
+        # -------- Draft Reply --------
         st.markdown("---")
         st.markdown("### ✍ Draft Reply")
 
         tone = st.selectbox("Reply Tone", ["Formal", "Professional", "Friendly", "Short"])
 
         if st.button("Generate Draft"):
-            draft = draft_auto_reply(email_text, st.session_state["prompts"]["auto_reply_prompt"], tone)
+            draft = draft_auto_reply(email_text, prompts["auto_reply_prompt"], tone)
             st.session_state["temp_draft"] = draft
 
         if "temp_draft" in st.session_state:
+
             edited_subject = st.text_input("Edit Subject", st.session_state["temp_draft"]["subject"])
             edited_body = st.text_area("Edit Body", st.session_state["temp_draft"]["body"], height=200)
 
@@ -307,8 +360,8 @@ Body:
                 st.success("✅ Draft saved successfully")
 
     # ========== TAB 3 : DRAFTS ==========
-
     with tab3:
+
         st.subheader("✍ Saved Drafts")
 
         if not st.session_state["drafts"]:
