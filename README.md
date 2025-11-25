@@ -83,10 +83,45 @@ email-agent/
 Follow these steps to run the project on your machine.
 - Step 1: Clone the Repository
 ```bash
-git clone <your-repository-link>
+git clone https://github.com/Pragni24/email-agent
 cd email-agent
 ```
 - Step 2: Create a Virtual Environment
 
 This keeps your project dependencies isolated.
+On Windows:
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
 
+On macOS / Linux:
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+- Step 3: Install Required Python Packages
+```bash
+pip install -r requirements.txt
+```
+
+- Step 4: Configure Environment Variables
+
+Create a file named .env in the root folder of your project and add:
+```bash
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.1-8b-instant
+```
+⚠ Important: Do NOT upload your .env file to GitHub.
+
+- Step 5: Run the Application
+
+Start the Streamlit app using:
+```bash
+streamlit run app.py
+```
+Now open your browser and go to:
+```bash
+http://localhost:8501
+```
+You should now see your Email Productivity Agent UI running.
